@@ -7,5 +7,5 @@ You need to npm install
 Then you will run node index.js
 The application is going to ask you to pick a file 1 or 2, you can type a number or just hit enter to pick the default
 The application will do its magic analysis and plot a chart in the terminal ( please have the terminal full screen)
-The application will then ask you wheather you want to plot the days were the app thinks it's worth highlighting you may hit enter or if want to end the app press control c or command c
+The application will then ask you whether you want to plot the days were the app thinks it's worth highlighting you may hit enter or if want to end the app press control c or command c
 
