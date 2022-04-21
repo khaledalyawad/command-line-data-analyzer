@@ -5,6 +5,12 @@ const _ = require('lodash');
 const cleanDataNeedFlattening = require('./clean_util/cleanDataNeedFlattening');
 const cleanFlatData = require('./clean_util/cleanFlatData');
 
+Date.prototype.getWeek = function () {
+    var onejan = new Date(this.getFullYear(), 0, 1);
+    var today = new Date(this.getFullYear(), this.getMonth(), this.getDate());
+    var dayOfYear = ((today - onejan + 86400000) / 86400000);
+    return Math.ceil(dayOfYear / 7)
+};
 
 module.exports = function readFileGenerateInsights(filename) {
     const data = fs.readFileSync(filename, 'utf8');
@@ -53,8 +59,10 @@ function generateInsights(o) {
     const events_on_idel = { data: [], values: [], daysAndTime: [] };
     const events_on_extreme_load = { data: [], values: [], daysAndTime: [] }; // bounos insight 
     const trendLine = []; // bounos insight 
+    const month = [], week = [], day = [], hour = [];
     o.data = _.sortBy(o.data, [function (o) { return o.timestamp; }]);
     o.data.forEach((item, i) => {
+        timeGrouping(o, i, item, month, week, day, hour);
         trendLine.push([item.timestamp, item.value]);
         if (item.value > (o.max * 0.2)) {
             item.insight = 'On - loaded is 20-100+% of operating load.';
@@ -87,6 +95,7 @@ function generateInsights(o) {
 
     return {
         data: o.data,
+        meta: {month, week, day, hour},
         total: o.data.length,
         trendLine,
         max: o.max,
@@ -101,4 +110,15 @@ function generateInsights(o) {
         days_events_on_unloaded: events_on_unloaded.daysAndTime,
 
     };
+
+    function timeGrouping(o, i, item, month, week, day, hour) {
+        o.data[i].month = `Month: ${new Date(item.timestamp).getMonth() + 1} | Year: ${new Date(item.timestamp).getFullYear()}`
+        o.data[i].week = `Week: ${new Date(item.timestamp).getWeek()} | ${o.data[i].month}`;
+        o.data[i].day = `Day: ${new Date(item.timestamp).getDate()} | ${o.data[i].week}`;
+        o.data[i].hour = `Hour: ${new Date(item.timestamp).getHours()} | ${o.data[i].day}`;
+        (month.indexOf(o.data[i].month) === - 1) && month.push(o.data[i].month);
+        (week.indexOf(o.data[i].week) === - 1) && week.push(o.data[i].week);
+        (day.indexOf(o.data[i].day) === - 1) && day.push(o.data[i].day);
+        (hour.indexOf(o.data[i].hour) === - 1) && hour.push(o.data[i].hour);
+    }
 }

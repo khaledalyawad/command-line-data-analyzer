@@ -6,8 +6,10 @@ app.use(cors({ origin: '*' }));
 
 const port = 3000;
 
-app.get('/api/events', (req, res) => {
-    filename = 'input/demoCompressorWeekData.csv';
+app.get('/api/data', (req, res) => {
+    req.query.filename;
+    filename = `input/${req.query.filename}.csv`;
+    // filename = 'input/demoCompressorWeekData.csv';
     // filename = 'input/demoPumpDayData.csv';
     const insights = readFileGenerateInsights(filename);
     res.send(insights);
