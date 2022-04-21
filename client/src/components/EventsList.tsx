@@ -87,6 +87,10 @@ const EventsList: React.FC = () => {
   const setActiveFile = (file: string) => {
     setLoading(true);
     setFile(file);
+    setShowChart(false);
+    setSelectedOptionHour(null);
+    setSelectedOptionDay(null);
+    setSelectedOptionWeek(null);
   };
 
   const handleHourChange = function (selectedOption: any) {
@@ -138,7 +142,7 @@ const EventsList: React.FC = () => {
     <>
       <div className="list row">
         <div className="col-md-12">
-          <h4>Log List</h4>
+          <h4>Device Log</h4>
         </div>
       </div>
       <div className="list row">
@@ -148,9 +152,10 @@ const EventsList: React.FC = () => {
             <div style={{ display: 'flex', 'justifyContent': 'space-between' }}><span>Please choose a file </span>{loading && <>&nbsp; &nbsp; &nbsp; loading ...</>}</div>
             <br />
             <div className="btn-group" role="group">
-              <button disabled={loading} onClick={() => setActiveFile('demoCompressorWeekData')} type="button" className={"btn " + (file === "demoCompressorWeekData" ? "btn-dark" : "btn-link")}>demoCompressorWeekData</button>
-              <button disabled={loading} onClick={() => setActiveFile('demoPumpDayData')} type="button" className={"btn " + (file === "demoPumpDayData" ? "btn-dark" : "btn-link")}>demoPumpDayData</button>
+              <button disabled={loading} onClick={() => setActiveFile('demoCompressorWeekData')} type="button" className={"btn " + (file === "demoCompressorWeekData" ? "btn-success" : "btn-link")}>demoCompressorWeekData</button>
+              <button disabled={loading} onClick={() => setActiveFile('demoPumpDayData')} type="button" className={"btn " + (file === "demoPumpDayData" ? "btn-success" : "btn-link")}>demoPumpDayData</button>
             </div>
+            <hr/>
           </div>
         </div>
       </div>
