@@ -1,5 +1,6 @@
 export default interface Response {
   data: [],
+  month: [], week: [], day: [], hour: [],
   total: any,
   trendLine: any,
   max: any,

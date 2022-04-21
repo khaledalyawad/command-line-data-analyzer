@@ -2,23 +2,23 @@ import http from "../http-common";
 import IEventData from "../types/Event";
 
 const getAll = () => {
-  return http.get<Array<IEventData>>("/events");
+  return http.get<Array<IEventData>>(`/data`);
 };
 
 const get = (id: any) => {
-  return http.get<IEventData>(`/events/${id}`);
+  return http.get<IEventData>(`/data/?filename=${id}`);
 };
 
 const create = (data: IEventData) => {
-  return http.post<IEventData>("/events", data);
+  return http.post<IEventData>("/data", data);
 };
 
 const update = (id: any, data: IEventData) => {
-  return http.put<any>(`/events/${id}`, data);
+  return http.put<any>(`/data/${id}`, data);
 };
 
 const remove = (id: any) => {
-  return http.delete<any>(`/events/${id}`);
+  return http.delete<any>(`/data/${id}`);
 };
 
 const removeAll = () => {
