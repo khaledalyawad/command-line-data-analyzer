@@ -86,6 +86,7 @@ function generateInsights(o) {
 
 
     return {
+        data: o.data,
         total: o.data.length,
         trendLine,
         max: o.max,

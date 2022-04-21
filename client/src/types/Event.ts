@@ -1,0 +1,15 @@
+export default interface Response {
+  data: [],
+  total: any,
+  trendLine: any,
+  max: any,
+  events_on_20_100: any,
+  events_off: any,
+  events_on_unloaded: any,
+  events_on_idel: any,
+  events_on_extreme_load: any,
+  message: any,
+  bounosInsight: any,
+  days_events_on_idel: any,
+  days_events_on_unloaded: any,
+}

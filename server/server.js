@@ -1,9 +1,12 @@
 const readFileGenerateInsights = require('./src/shared');
 const express = require('express');
+const cors = require('cors');
 const app = express();
+app.use(cors({ origin: '*' }));
+
 const port = 3000;
 
-app.get('/', (req, res) => {
+app.get('/api/events', (req, res) => {
     filename = 'input/demoCompressorWeekData.csv';
     // filename = 'input/demoPumpDayData.csv';
     const insights = readFileGenerateInsights(filename);
