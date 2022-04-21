@@ -95,7 +95,7 @@ function generateInsights(o) {
 
     return {
         data: o.data,
-        meta: {month, week, day, hour},
+        month, week, day, hour,
         total: o.data.length,
         trendLine,
         max: o.max,
@@ -116,9 +116,17 @@ function generateInsights(o) {
         o.data[i].week = `Week: ${new Date(item.timestamp).getWeek()} | ${o.data[i].month}`;
         o.data[i].day = `Day: ${new Date(item.timestamp).getDate()} | ${o.data[i].week}`;
         o.data[i].hour = `Hour: ${new Date(item.timestamp).getHours()} | ${o.data[i].day}`;
-        (month.indexOf(o.data[i].month) === - 1) && month.push(o.data[i].month);
-        (week.indexOf(o.data[i].week) === - 1) && week.push(o.data[i].week);
-        (day.indexOf(o.data[i].day) === - 1) && day.push(o.data[i].day);
-        (hour.indexOf(o.data[i].hour) === - 1) && hour.push(o.data[i].hour);
+        if (month.length === 0 || month[month.length - 1].value !== o.data[i].month ) {
+            month.push({ value: o.data[i].month, label: o.data[i].month });
+        }
+        if (week.length === 0 || week[week.length - 1].value !== o.data[i].week ) {
+            week.push({ value: o.data[i].week, label: o.data[i].week });
+        }
+        if (day.length === 0 || day[day.length - 1].value !== o.data[i].day ) {
+            day.push({ value: o.data[i].day, label: o.data[i].day });
+        }
+        if (hour.length === 0 || hour[hour.length - 1].value !== o.data[i].hour ) {
+            hour.push({ value: o.data[i].hour, label: o.data[i].hour });
+        }
     }
 }
