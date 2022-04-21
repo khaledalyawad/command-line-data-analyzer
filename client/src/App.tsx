@@ -12,13 +12,6 @@ const App: React.FC = () => {
         <a href="/events" className="navbar-brand">
           Psum Logs
         </a>
-        <div className="navbar-nav mr-auto">
-          <li className="nav-item">
-            <Link to={"/events"} className="nav-link">
-              Events
-            </Link>
-          </li>
-        </div>
       </nav>
 
       <div className="container mt-3">

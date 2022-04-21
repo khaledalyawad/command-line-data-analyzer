@@ -2,6 +2,17 @@ import React, { useState, useEffect } from "react";
 import EventDataService from "../services/EventService";
 import Response from '../types/Event';
 import Select from 'react-select';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+import { Line } from 'react-chartjs-2';
 
 const EventsList: React.FC = () => {
   const [response, setResponse] = useState({} as Response);
@@ -13,16 +24,55 @@ const EventsList: React.FC = () => {
   const [selectedOptionHour, setSelectedOptionHour] = useState<{}| null>(null);
   const [selectedOptionDay, setSelectedOptionDay] = useState<{}| null>(null);
   const [selectedOptionWeek, setSelectedOptionWeek] = useState<{}| null>(null);
+  const [chartData, setChartData] = useState<string[]>([]);
+  const [chartLabel, setChartLabel] = useState<number[]>([]);
+  const [showChart, setShowChart] = useState<boolean>(false);
 
   useEffect(() => {
     retrieveEvents(file);
   }, [file]);
 
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+  );
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+      },
+      title: {
+        display: true,
+        text: 'Chart.js Line Chart',
+      },
+    },
+  };
+
+  const labels = chartLabel;
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: 'Dataset 1',
+        data: [...chartData]
+        ,
+        borderColor: 'rgb(255, 99, 132)',
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+      }
+    ],
+  };
+
   const retrieveEvents = (file: any) => {
     setLoading(true);
     EventDataService.get(file)
       .then((res: any) => {
-        console.log(res.data);
         setResponse(res.data);
         setHours(res.data.hour);        
         setDays(res.data.day);        
@@ -43,23 +93,43 @@ const EventsList: React.FC = () => {
     setSelectedOptionHour(selectedOption);
     setSelectedOptionDay(null);
     setSelectedOptionWeek(null);
-    console.log(filterDisplayData(selectedOption, 'hour'))
+    filterDisplayData(selectedOption, 'hour');
+    renderChart();
+    
   }
   const handleDayChange = function (selectedOption: any) {
     setSelectedOptionHour(null);
     setSelectedOptionDay(selectedOption);
     setSelectedOptionWeek(null);
-    console.log(filterDisplayData(selectedOption, 'day'))
+    filterDisplayData(selectedOption, 'day');
+    renderChart();
+    
   }
   const handleWeekChange = function (selectedOption: any) {
     setSelectedOptionHour(null);
     setSelectedOptionDay(null);
     setSelectedOptionWeek(selectedOption);
-    console.log(filterDisplayData(selectedOption, 'week'))
+    filterDisplayData(selectedOption, 'week');
+    renderChart();
+    
+  }
+
+  const renderChart = function() {
+    setShowChart(true);
   }
 
   const filterDisplayData = function (selectedOption: any, cycle: string) {
-    return response.data.filter((item: any)=>{      
+    chartData.length = 0;
+    setChartData([...chartData]);
+    chartLabel.length = 0;
+    setChartLabel([...chartLabel]);
+    return response.data.filter((item: any, i: number)=>{      
+      if (item[cycle].includes(selectedOption.value)){
+        chartData.push(item.value);
+        setChartData([...chartData]);
+        chartLabel.push(i);
+        setChartLabel([...chartLabel]);
+      }
       return item[cycle].includes(selectedOption.value)
     })    
   }
@@ -67,11 +137,12 @@ const EventsList: React.FC = () => {
   return (
     <>
       <div className="list row">
-        <div className="col-md-6">
+        <div className="col-md-12">
           <h4>Log List</h4>
         </div>
-
-        <div className="col-md-6">
+      </div>
+      <div className="list row">
+        <div className="col-md-12">
           <div>
             <br />
             <div style={{ display: 'flex', 'justifyContent': 'space-between' }}><span>Please choose a file </span>{loading && <>&nbsp; &nbsp; &nbsp; loading ...</>}</div>
@@ -85,13 +156,13 @@ const EventsList: React.FC = () => {
       </div>
       <br />
       <div className="list row">
-        {response.message && <div className="col-md-6">
+        {response.message && <div className="col-md-12">
           {response.message}
         </div>}
       </div>
       <br />
       <div className="list row">
-        {response.message && <div className="col-md-6">
+        {response.message && <div className="col-md-12">
           Hour:
           <Select
             value={selectedOptionHour}
@@ -102,7 +173,7 @@ const EventsList: React.FC = () => {
       </div>
       <br />
       <div className="list row">
-        {response.message && <div className="col-md-6">
+        {response.message && <div className="col-md-12">
           Days:
           <Select
             value={selectedOptionDay}
@@ -113,13 +184,18 @@ const EventsList: React.FC = () => {
       </div>
       <br />
       <div className="list row">
-        {response.message &&<div className="col-md-6">
+        {response.message &&<div className="col-md-12">
           Weeks:
            <Select
             value={selectedOptionWeek}
             onChange={handleWeekChange}
             options={weeks}
           />
+        </div>}
+      </div>
+      <div className="list row">
+        {showChart && <div className="col-md-12">
+          <Line options={options} data={data} />
         </div>}
       </div>
     </>
