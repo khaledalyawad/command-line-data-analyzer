@@ -17,7 +17,6 @@ const App: React.FC = () => {
       <div className="container mt-3">
         <Routes>
           <Route path="/" element={<EventsList/>} />
-          <Route path="/events" element={<EventsList/>} />
         </Routes>
       </div>
     </div>
